@@ -76,6 +76,7 @@ npx cogem-dualflow
 - `/cogem:backend`
 - `/cogem:frontend`
 - `/cogem:workflow`
+- `/cogem:publish`：仓库创建 + 推送 + 发版自动化（优先 GitHub MCP）
 
 项目上下文：
 

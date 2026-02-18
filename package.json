@@ -44,6 +44,7 @@
     "templates/commands/test.md",
     "templates/commands/workflow.md",
     "templates/commands/worktree.md",
+    "templates/commands/publish.md",
     "templates/commands/spec-init.md",
     "templates/commands/spec-research.md",
     "templates/commands/spec-plan.md",

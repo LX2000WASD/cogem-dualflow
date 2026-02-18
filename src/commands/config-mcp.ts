@@ -3,6 +3,19 @@ import inquirer from 'inquirer'
 import { i18n } from '../i18n'
 import { installAceTool, installAceToolRs, installContextWeaver, installMcpServer, uninstallAceTool, uninstallContextWeaver, uninstallMcpServer } from '../utils/installer'
 
+interface AuxiliaryMcpConfig {
+  id: string
+  name: string
+  desc: string
+  command: string
+  args: string[]
+  requiresApiKey?: boolean
+  apiKeyEnv?: string
+  apiKeyHelpUrl?: string
+  apiKeyHint?: string
+  apiKeyLabel?: string
+}
+
 /**
  * Configure MCP tools after installation
  */
@@ -17,7 +30,7 @@ export async function configMcp(): Promise<void> {
     message: '选择操作',
     choices: [
       { name: `${ansis.green('➜')} 代码检索 MCP ${ansis.gray('(ContextWeaver / ace-tool)')}`, value: 'code-retrieval' },
-      { name: `${ansis.blue('➜')} 辅助工具 MCP ${ansis.gray('(context7 / Playwright / exa...)')}`, value: 'auxiliary' },
+      { name: `${ansis.blue('➜')} 辅助工具 MCP ${ansis.gray('(context7 / Playwright / GitHub / exa...)')}`, value: 'auxiliary' },
       { name: `${ansis.red('✕')} 卸载 MCP`, value: 'uninstall' },
       new inquirer.Separator(),
       { name: `${ansis.gray('返回')}`, value: 'cancel' },
@@ -128,12 +141,34 @@ async function handleInstallContextWeaver(): Promise<void> {
   }
 }
 
-// 辅助工具 MCP 配置
-const AUXILIARY_MCPS = [
+const AUXILIARY_MCPS: AuxiliaryMcpConfig[] = [
   { id: 'context7', name: 'Context7', desc: '获取最新库文档', command: 'npx', args: ['-y', '@upstash/context7-mcp@latest'] },
-  { id: 'Playwright', name: 'Playwright', desc: '浏览器自动化/测试', command: 'npx', args: ['-y', '@playwright/mcp@latest'] },
+  { id: 'playwright', name: 'Playwright', desc: '浏览器自动化/测试', command: 'npx', args: ['-y', '@playwright/mcp@latest'] },
   { id: 'mcp-deepwiki', name: 'DeepWiki', desc: '知识库查询', command: 'npx', args: ['-y', 'mcp-deepwiki@latest'] },
-  { id: 'exa', name: 'Exa', desc: '搜索引擎（需 API Key）', command: 'npx', args: ['-y', 'exa-mcp-server@latest'], requiresApiKey: true, apiKeyEnv: 'EXA_API_KEY' },
+  {
+    id: 'github',
+    name: 'GitHub',
+    desc: '仓库 / Issue / PR 自动化（创建仓库、提 PR）',
+    command: 'npx',
+    args: ['-y', '@modelcontextprotocol/server-github'],
+    requiresApiKey: true,
+    apiKeyEnv: 'GITHUB_PERSONAL_ACCESS_TOKEN',
+    apiKeyHelpUrl: 'https://github.com/settings/personal-access-tokens/new',
+    apiKeyHint: '建议为发布自动化至少授予 repo、read:org、workflow',
+    apiKeyLabel: 'GitHub Personal Access Token',
+  },
+  {
+    id: 'exa',
+    name: 'Exa',
+    desc: '搜索引擎（需 API Key）',
+    command: 'npx',
+    args: ['-y', 'exa-mcp-server@latest'],
+    requiresApiKey: true,
+    apiKeyEnv: 'EXA_API_KEY',
+    apiKeyHelpUrl: 'https://exa.ai/',
+    apiKeyHint: '注册后可在控制台获取 API Key（含免费额度）',
+    apiKeyLabel: 'Exa API Key',
+  },
 ]
 
 async function handleAuxiliary(): Promise<void> {
@@ -157,18 +192,26 @@ async function handleAuxiliary(): Promise<void> {
   console.log()
 
   for (const id of selected) {
-    const mcp = AUXILIARY_MCPS.find(m => m.id === id)!
-    let env: Record<string, string> = {}
+    const mcp = AUXILIARY_MCPS.find(m => m.id === id)
+    if (!mcp)
+      continue
+
+    const env: Record<string, string> = {}
 
     if (mcp.requiresApiKey) {
       console.log(ansis.cyan(`📖 获取 ${mcp.name} API Key：`))
-      console.log(`   访问 ${ansis.underline('https://exa.ai/')} 注册获取（有免费额度）`)
+      if (mcp.apiKeyHelpUrl) {
+        console.log(`   访问 ${ansis.underline(mcp.apiKeyHelpUrl)}`)
+      }
+      if (mcp.apiKeyHint) {
+        console.log(`   ${ansis.gray(mcp.apiKeyHint)}`)
+      }
       console.log()
 
       const { apiKey } = await inquirer.prompt([{
         type: 'password',
         name: 'apiKey',
-        message: `${mcp.name} API Key`,
+        message: mcp.apiKeyLabel || `${mcp.name} API Key`,
         mask: '*',
         validate: (v: string) => v.trim() !== '' || '请输入 API Key',
       }])

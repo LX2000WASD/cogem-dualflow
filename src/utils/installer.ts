@@ -23,7 +23,7 @@ function findPackageRoot(startDir: string): string {
 
 const PACKAGE_ROOT = findPackageRoot(__dirname)
 
-// All available commands (20 total after adding spec commands)
+// All available commands (includes publish automation)
 const ALL_COMMANDS = [
   'workflow', // 完整6阶段开发工作流
   'plan', // 多模型协作规划（Phase 1-2）
@@ -41,6 +41,7 @@ const ALL_COMMANDS = [
   'rollback', // Git 回滚
   'clean-branches', // Git 清理分支
   'worktree', // Git Worktree
+  'publish', // 仓库创建与发布自动化
   'spec-init', // OpenSpec 初始化
   'spec-research', // 需求研究 → 约束集
   'spec-plan', // 多模型分析 → 零决策计划
@@ -242,6 +243,17 @@ const WORKFLOW_CONFIGS: WorkflowConfig[] = [
     descriptionEn: 'Manage Git worktree',
   },
   {
+    id: 'publish',
+    name: '发布自动化',
+    nameEn: 'Publish Automation',
+    category: 'git',
+    commands: ['publish'],
+    defaultSelected: true,
+    order: 24,
+    description: '创建仓库并自动推送、打 tag、发布 npm',
+    descriptionEn: 'Create repo and automate push, tagging, and npm publishing',
+  },
+  {
     id: 'spec-init',
     name: 'OpenSpec 初始化',
     nameEn: 'OpenSpec Init',
@@ -366,8 +378,8 @@ export const WORKFLOW_PRESETS = {
   full: {
     name: '完整',
     nameEn: 'Full',
-    description: '全部命令（21个）',
-    descriptionEn: 'All commands (21)',
+    description: '全部命令（含发布自动化）',
+    descriptionEn: 'All commands (includes publish automation)',
     workflows: WORKFLOW_CONFIGS.map(w => w.id),
   },
 }

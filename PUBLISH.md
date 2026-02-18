@@ -2,6 +2,15 @@
 
 本文档用于从本地仓库到 GitHub + npm 的一次完整发布。
 
+## 0) 配置 GitHub MCP（推荐）
+
+```bash
+npx cogem-dualflow
+# 进入菜单后选择：配置 MCP -> 辅助工具 MCP -> GitHub
+```
+
+需要准备 GitHub Personal Access Token（建议至少包含 `repo`、`read:org`、`workflow` scope）。
+
 ## 1) 本地质量检查
 
 ```bash

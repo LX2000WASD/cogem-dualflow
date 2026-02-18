@@ -68,6 +68,7 @@ cogem
 | `/cogem:frontend` | 前端任务（Gemini） |
 | `/cogem:backend` | 后端任务（Codex） |
 | `/cogem:review` | 双模型代码审查 |
+| `/cogem:publish` | 创建仓库 + 推送 + 发版自动化（优先 GitHub MCP） |
 | `/cogem:init` | 初始化项目 `AGENTS.md` 上下文 |
 
 ## 目录结构
@@ -84,10 +85,11 @@ cogem
 
 ## MCP 配置
 
-支持代码检索 MCP（按需选择）：
+支持代码检索 / 发布自动化 MCP（按需选择）：
 
 - ContextWeaver（推荐）
 - ace-tool / ace-tool-rs
+- GitHub MCP（仓库 / Issue / PR 自动化）
 
 ```bash
 npx cogem-dualflow
