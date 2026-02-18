@@ -191,7 +191,8 @@ cogem --help
 ### 3) `cogem` 与 `/cogem:*` 是什么关系？
 
 - `cogem` / `cogem-dualflow`：终端命令（Shell CLI）
-- `/cogem:plan`、`/cogem:execute` 等：安装到 `~/.cogem/commands/cogem/` 的协作模板，供 Codex/Claude 会话内调用，不是 shell 命令
+- `/cogem:plan`、`/cogem:execute` 等：安装到 `~/.cogem/commands/cogem/` 的协作模板文件，不是 shell 命令
+- 目前 Codex CLI 不会自动把这些模板注册为 `/cogem:*` 指令；Codex 里需通过 AGENTS/Skills 或手动引用模板内容使用
 
 ### 4) 已全局安装但仍提示 `cogem: not found` 怎么办？
 
