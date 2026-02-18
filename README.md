@@ -26,8 +26,17 @@ npx cogem-dualflow
 
 ```bash
 npm install -g cogem-dualflow
-cogem
+cogem --version
+cogem-dualflow --version
 ```
+
+如果提示 `cogem: not found`，请检查全局 bin 路径是否在 `PATH` 中：
+
+```bash
+npm config get prefix
+npm bin -g
+```
+
 
 ### 方式 3：下载源码后本地安装
 
