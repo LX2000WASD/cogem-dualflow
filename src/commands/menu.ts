@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'pathe'
 import fs from 'fs-extra'
 import { configMcp } from './config-mcp'
+import { launchCodexWorkbench, setupCodexBridgeAndPrint } from './codex-workbench'
 import { i18n } from '../i18n'
 import { uninstallWorkflows } from '../utils/installer'
 import { init } from './init'
@@ -316,6 +317,7 @@ async function handleTools(): Promise<void> {
     message: '选择工具',
     choices: [
       { name: `${ansis.green('📊')} ccusage ${ansis.gray('- 命令行用量分析')}`, value: 'ccusage' },
+      { name: `${ansis.magenta('🧠')} CoGem Workbench ${ansis.gray('- 一体化 Codex 入口')}`, value: 'codex-workbench' },
       { name: `${ansis.blue('📟')} CCometixLine ${ansis.gray('- 状态栏工具（Git + 用量）')}`, value: 'ccline' },
       new inquirer.Separator(),
       { name: `${ansis.gray('返回')}`, value: 'cancel' },
@@ -327,6 +329,9 @@ async function handleTools(): Promise<void> {
 
   if (tool === 'ccusage') {
     await runCcusage()
+  }
+  else if (tool === 'codex-workbench') {
+    await handleCodexWorkbench()
   }
   else if (tool === 'ccline') {
     await handleCCometixLine()
@@ -347,6 +352,32 @@ async function runCcusage(): Promise<void> {
     child.on('close', () => resolve())
     child.on('error', () => resolve())
   })
+}
+
+async function handleCodexWorkbench(): Promise<void> {
+  console.log()
+
+  const { action } = await inquirer.prompt([{
+    type: 'list',
+    name: 'action',
+    message: 'CoGem Workbench 操作',
+    choices: [
+      { name: `${ansis.green('➜')} 配置 Codex 适配层`, value: 'setup' },
+      { name: `${ansis.cyan('➜')} 进入 Workbench（启动 Codex）`, value: 'launch' },
+      new inquirer.Separator(),
+      { name: `${ansis.gray('返回')}`, value: 'cancel' },
+    ],
+  }])
+
+  if (action === 'cancel')
+    return
+
+  if (action === 'setup') {
+    await setupCodexBridgeAndPrint()
+  }
+  else if (action === 'launch') {
+    await launchCodexWorkbench()
+  }
 }
 
 async function handleCCometixLine(): Promise<void> {

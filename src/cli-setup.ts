@@ -3,6 +3,7 @@ import type { CliOptions } from './types'
 import ansis from 'ansis'
 import { version } from '../package.json'
 import { configMcp } from './commands/config-mcp'
+import { launchCodexWorkbench, setupCodexBridgeAndPrint } from './commands/codex-workbench'
 import { diagnoseMcp, fixMcp } from './commands/diagnose-mcp'
 import { init } from './commands/init'
 import { showMainMenu } from './commands/menu'
@@ -21,6 +22,8 @@ function customizeHelp(sections: any[]): any[] {
     body: [
       `  ${ansis.cyan('cogem')}              ${i18n.t('cli:help.commandDescriptions.showMenu')}`,
       `  ${ansis.cyan('cogem init')} | ${ansis.cyan('i')}     ${i18n.t('cli:help.commandDescriptions.initConfig')}`,
+      `  ${ansis.cyan('cogem setup-codex')}  配置 Codex 适配层（/cogem:* bridge）`,
+      `  ${ansis.cyan('cogem codex')}        启动 CoGem Workbench（统一存储）`,
       `  ${ansis.cyan('cogem config mcp')}   配置 MCP（交互式）`,
       `  ${ansis.cyan('cogem setup-github-mcp')} 快速配置 GitHub MCP`,
       `  ${ansis.cyan('cogem diagnose-mcp')} 诊断 MCP 配置问题`,
@@ -59,6 +62,10 @@ function customizeHelp(sections: any[]): any[] {
       `  ${ansis.cyan('npx cogem-dualflow init')}`,
       `  ${ansis.cyan('npx cogem-dualflow i')}`,
       '',
+      ansis.gray('  # 配置 Codex 适配层并使用统一目录启动 Codex'),
+      `  ${ansis.cyan('npx cogem-dualflow setup-codex')}`,
+      `  ${ansis.cyan('npx cogem-dualflow codex')}`,
+      '',
       ansis.gray(`  # ${i18n.t('cli:help.exampleDescriptions.customModels')}`),
       `  ${ansis.cyan('npx cogem-dualflow i --frontend gemini,codex --backend codex,gemini')}`,
       '',
@@ -81,7 +88,6 @@ export async function setupCommands(cli: CAC): Promise<void> {
     await initI18n('zh-CN')
   }
 
-  // Default command - show menu
   cli
     .command('', '显示交互式菜单（默认）')
     .option('--lang, -l <lang>', '显示语言 (zh-CN, en)')
@@ -92,7 +98,6 @@ export async function setupCommands(cli: CAC): Promise<void> {
       await showMainMenu()
     })
 
-  // Init command
   cli
     .command('init', '初始化 CoGem 协作系统')
     .alias('i')
@@ -112,21 +117,33 @@ export async function setupCommands(cli: CAC): Promise<void> {
       await init(options)
     })
 
-  // Diagnose MCP command
+  cli
+    .command('setup-codex', '安装 Codex 适配层（/cogem:* bridge）')
+    .option('--codex-home <path>', 'Codex HOME 路径（默认: ~/.cogem/codex-home）')
+    .option('--force', '强制重建 bridge skill 与命令模板')
+    .action(async (options: { codexHome?: string, force?: boolean }) => {
+      await setupCodexBridgeAndPrint({ codexHome: options.codexHome, force: options.force })
+    })
+
+  cli
+    .command('codex [...args]', '启动 CoGem Workbench（统一存储）')
+    .option('--codex-home <path>', 'Codex HOME 路径（默认: ~/.cogem/codex-home）')
+    .action(async (args: string[], options: { codexHome?: string }) => {
+      await launchCodexWorkbench(args || [], { codexHome: options.codexHome })
+    })
+
   cli
     .command('diagnose-mcp', '诊断 MCP 配置问题')
     .action(async () => {
       await diagnoseMcp()
     })
 
-  // Fix MCP command (Windows only)
   cli
     .command('fix-mcp', '修复 Windows MCP 配置问题')
     .action(async () => {
       await fixMcp()
     })
 
-  // Config MCP command
   cli
     .command('config <subcommand>', '配置 CoGem 设置')
     .action(async (subcommand: string) => {
@@ -139,7 +156,6 @@ export async function setupCommands(cli: CAC): Promise<void> {
       }
     })
 
-  // Quick setup GitHub MCP command
   cli
     .command('setup-github-mcp', '快速配置 GitHub MCP（非交互）')
     .option('--token <token>', 'GitHub Personal Access Token')

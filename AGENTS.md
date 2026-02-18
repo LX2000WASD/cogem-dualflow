@@ -27,6 +27,10 @@ CoGem 是一个 **不依赖 Claude** 的多模型协作工作流：
 
 ```bash
 npx cogem-dualflow
+# Codex 适配
+npx cogem-dualflow setup-codex
+# 一体化入口
+npx cogem-dualflow codex
 ```
 
 ### 核心路径

@@ -192,7 +192,7 @@ cogem --help
 
 - `cogem` / `cogem-dualflow`：终端命令（Shell CLI）
 - `/cogem:plan`、`/cogem:execute` 等：安装到 `~/.cogem/commands/cogem/` 的协作模板文件，不是 shell 命令
-- 目前 Codex CLI 不会自动把这些模板注册为 `/cogem:*` 指令；Codex 里需通过 AGENTS/Skills 或手动引用模板内容使用
+- 默认情况下 Codex CLI 不会自动注册这些模板；可运行 `npx cogem-dualflow setup-codex` 安装 bridge skill，再用 `npx cogem-dualflow codex` 启动一体化环境
 
 ### 4) 已全局安装但仍提示 `cogem: not found` 怎么办？
 
@@ -207,3 +207,21 @@ npm bin -g
 cogem --version
 cogem-dualflow --version
 ```
+
+## Codex 适配与一体化入口
+
+如果你希望在 Codex 里也能用 `/cogem:*` 触发语义（而不是手动找模板），请先安装适配层：
+
+```bash
+npx cogem-dualflow setup-codex
+```
+
+然后通过 CoGem Workbench 启动 Codex（会自动使用统一目录 `~/.cogem/codex-home`，并加载 bridge skill）：
+
+```bash
+npx cogem-dualflow codex
+# 或全局安装后
+cogem codex
+```
+
+这样可以把会话记录/缓存/技能等集中到 CoGem 目录，减少双目录来回排查。
