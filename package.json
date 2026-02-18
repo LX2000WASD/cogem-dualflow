@@ -99,10 +99,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cogem-dev/cogem-dualflow.git"
+    "url": "git+https://github.com/LX2000WASD/cogem-dualflow.git"
   },
-  "homepage": "https://github.com/cogem-dev/cogem-dualflow#readme",
+  "homepage": "https://github.com/LX2000WASD/cogem-dualflow#readme",
   "bugs": {
-    "url": "https://github.com/cogem-dev/cogem-dualflow/issues"
+    "url": "https://github.com/LX2000WASD/cogem-dualflow/issues"
   }
 }

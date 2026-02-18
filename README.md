@@ -32,7 +32,7 @@ cogem
 ### 方式 3：下载源码后本地安装
 
 ```bash
-git clone https://github.com/cogem-dev/cogem-dualflow.git
+git clone https://github.com/LX2000WASD/cogem-dualflow.git
 cd cogem-dualflow
 npm install
 npm run build
@@ -49,7 +49,7 @@ npm install -g ./cogem-dualflow.tgz
 cogem
 
 # 方案 B：从 GitHub Releases 下载（替换为实际发布链接）
-# curl -L https://github.com/cogem-dev/cogem-dualflow/releases/download/v<version>/cogem-dualflow-<version>.tgz -o cogem-dualflow.tgz
+# curl -L https://github.com/LX2000WASD/cogem-dualflow/releases/download/v<version>/cogem-dualflow-<version>.tgz -o cogem-dualflow.tgz
 ```
 
 ## 环境要求

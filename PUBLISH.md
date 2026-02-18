@@ -31,12 +31,12 @@ git commit -m "chore: bootstrap cogem-dualflow"
 
 ## 3) 创建并绑定 GitHub 仓库
 
-先在 GitHub 创建空仓库：`cogem-dev/cogem-dualflow`（不要勾选 README 初始化）。
+先在 GitHub 创建空仓库：`LX2000WASD/cogem-dualflow`（不要勾选 README 初始化）。
 
 ```bash
-git remote add origin git@github.com:cogem-dev/cogem-dualflow.git
+git remote add origin git@github.com:LX2000WASD/cogem-dualflow.git
 # 或 HTTPS
-git remote add origin https://github.com/cogem-dev/cogem-dualflow.git
+git remote add origin https://github.com/LX2000WASD/cogem-dualflow.git
 
 git push -u origin main
 ```
