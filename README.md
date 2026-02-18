@@ -154,3 +154,46 @@ git push origin main --tags
 ## 许可
 
 MIT
+
+## 常见问题（GUI 与命令入口）
+
+### 1) 我们有独立 GUI 客户端吗？
+
+没有独立桌面 GUI（例如 Electron/Tauri 应用）。
+你看到的是 **终端内交互菜单（TUI）**，由 CLI 在命令行中渲染。
+
+### 2) 为什么第一次能看到界面，之后输入 `cogem` 却提示 not found？
+
+通常是因为你用的是：
+
+```bash
+npx cogem-dualflow
+```
+
+`npx` 是“一次性运行”，不会默认把 `cogem` 安装为全局命令。
+
+要长期使用 `cogem`，请执行：
+
+```bash
+npm install -g cogem-dualflow
+cogem --help
+```
+
+### 3) `cogem` 与 `/cogem:*` 是什么关系？
+
+- `cogem` / `cogem-dualflow`：终端命令（Shell CLI）
+- `/cogem:plan`、`/cogem:execute` 等：安装到 `~/.cogem/commands/cogem/` 的协作模板，供 Codex/Claude 会话内调用，不是 shell 命令
+
+### 4) 已全局安装但仍提示 `cogem: not found` 怎么办？
+
+```bash
+npm config get prefix
+npm bin -g
+```
+
+确保全局 bin 目录在 `PATH` 中；然后重开终端再试：
+
+```bash
+cogem --version
+cogem-dualflow --version
+```
