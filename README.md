@@ -40,11 +40,16 @@ npm link
 cogem
 ```
 
-### 方式 4：下载发布包（.tgz）后安装
+### 方式 4：直接下载发布包（.tgz）后安装
 
 ```bash
-npm install -g ./cogem-dualflow-<version>.tgz
+# 方案 A：从 npm tarball 下载
+curl -L https://registry.npmjs.org/cogem-dualflow/-/cogem-dualflow-<version>.tgz -o cogem-dualflow.tgz
+npm install -g ./cogem-dualflow.tgz
 cogem
+
+# 方案 B：从 GitHub Releases 下载（替换为实际发布链接）
+# curl -L https://github.com/cogem-dev/cogem-dualflow/releases/download/v<version>/cogem-dualflow-<version>.tgz -o cogem-dualflow.tgz
 ```
 
 ## 环境要求
