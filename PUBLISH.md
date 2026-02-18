@@ -5,8 +5,13 @@
 ## 0) 配置 GitHub MCP（推荐）
 
 ```bash
+# 交互式
 npx cogem-dualflow
 # 进入菜单后选择：配置 MCP -> 辅助工具 MCP -> GitHub
+
+# 非交互（推荐 CI / 自动化）
+export GITHUB_PERSONAL_ACCESS_TOKEN=<your_token>
+npx cogem-dualflow setup-github-mcp
 ```
 
 需要准备 GitHub Personal Access Token（建议至少包含 `repo`、`read:org`、`workflow` scope）。

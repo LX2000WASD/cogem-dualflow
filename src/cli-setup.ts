@@ -8,6 +8,7 @@ import { init } from './commands/init'
 import { showMainMenu } from './commands/menu'
 import { i18n, initI18n } from './i18n'
 import { readWorkflowConfig } from './utils/config'
+import { installMcpServer } from './utils/installer'
 
 function customizeHelp(sections: any[]): any[] {
   sections.unshift({
@@ -20,7 +21,8 @@ function customizeHelp(sections: any[]): any[] {
     body: [
       `  ${ansis.cyan('cogem')}              ${i18n.t('cli:help.commandDescriptions.showMenu')}`,
       `  ${ansis.cyan('cogem init')} | ${ansis.cyan('i')}     ${i18n.t('cli:help.commandDescriptions.initConfig')}`,
-      `  ${ansis.cyan('cogem config mcp')}   配置 ace-tool MCP Token`,
+      `  ${ansis.cyan('cogem config mcp')}   配置 MCP（交互式）`,
+      `  ${ansis.cyan('cogem setup-github-mcp')} 快速配置 GitHub MCP`,
       `  ${ansis.cyan('cogem diagnose-mcp')} 诊断 MCP 配置问题`,
       `  ${ansis.cyan('cogem fix-mcp')}      修复 Windows MCP 配置`,
       '',
@@ -134,6 +136,37 @@ export async function setupCommands(cli: CAC): Promise<void> {
       else {
         console.log(ansis.red(`未知子命令: ${subcommand}`))
         console.log(ansis.gray('可用子命令: mcp'))
+      }
+    })
+
+  // Quick setup GitHub MCP command
+  cli
+    .command('setup-github-mcp', '快速配置 GitHub MCP（非交互）')
+    .option('--token <token>', 'GitHub Personal Access Token')
+    .action(async (options: { token?: string }) => {
+      const token = options.token || process.env.GITHUB_PERSONAL_ACCESS_TOKEN
+
+      if (!token?.trim()) {
+        console.log(ansis.red('✗ 未提供 GitHub Token'))
+        console.log(ansis.gray('  请使用 --token 或设置环境变量 GITHUB_PERSONAL_ACCESS_TOKEN'))
+        console.log(ansis.gray('  Token 页面: https://github.com/settings/personal-access-tokens/new'))
+        return
+      }
+
+      console.log(ansis.yellow('⏳ 正在安装 GitHub MCP...'))
+      const result = await installMcpServer(
+        'github',
+        'npx',
+        ['-y', '@modelcontextprotocol/server-github'],
+        { GITHUB_PERSONAL_ACCESS_TOKEN: token.trim() },
+      )
+
+      if (result.success) {
+        console.log(ansis.green('✓ GitHub MCP 配置成功'))
+        console.log(ansis.gray('  重启 CoGem CLI 使配置生效'))
+      }
+      else {
+        console.log(ansis.red(`✗ GitHub MCP 配置失败: ${result.message}`))
       }
     })
 

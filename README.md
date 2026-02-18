@@ -97,6 +97,13 @@ npx cogem-dualflow
 
 进入菜单后选择「配置 MCP」。
 
+也支持非交互快速配置 GitHub MCP：
+
+```bash
+export GITHUB_PERSONAL_ACCESS_TOKEN=<your_token>
+npx cogem-dualflow setup-github-mcp
+```
+
 ## 更新与卸载
 
 ```bash
